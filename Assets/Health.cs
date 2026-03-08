@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +8,9 @@ public class Health : MonoBehaviour
     public int defaultHealthPoint = 10;
 
     protected int healthPoint;
+
+    // thêm event khi chết
+    public System.Action onDead;
 
     protected virtual void Start()
     {
@@ -38,6 +41,9 @@ public class Health : MonoBehaviour
             );
             Destroy(explosion, 1f);
         }
+
+        // gọi event khi object chết
+        onDead?.Invoke();
 
         Destroy(gameObject);
     }
