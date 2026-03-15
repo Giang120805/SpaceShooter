@@ -7,14 +7,18 @@ public class Health : MonoBehaviour
     public GameObject explosionPrefab;
     public int defaultHealthPoint = 10;
 
-    protected int healthPoint;
+    public int healthPoint;
 
-    // thêm event khi chết
+    // Event
     public System.Action onDead;
+    public System.Action onHealthChanged;
 
-    protected virtual void Start()
+    private void Start()
     {
         healthPoint = defaultHealthPoint;
+
+        // cập nhật UI lúc bắt đầu
+        onHealthChanged?.Invoke();
     }
 
     public void TakeDamage(int damage)
@@ -22,7 +26,11 @@ public class Health : MonoBehaviour
         if (healthPoint <= 0) return;
 
         healthPoint -= damage;
+
         Debug.Log(gameObject.name + " HP: " + healthPoint);
+
+        // cập nhật thanh máu
+        onHealthChanged?.Invoke();
 
         if (healthPoint <= 0)
         {
@@ -39,10 +47,10 @@ public class Health : MonoBehaviour
                 transform.position,
                 transform.rotation
             );
+
             Destroy(explosion, 1f);
         }
 
-        // gọi event khi object chết
         onDead?.Invoke();
 
         Destroy(gameObject);
